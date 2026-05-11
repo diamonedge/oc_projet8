@@ -91,7 +91,9 @@ services:
     volumes:
       - data:${CONFIG_ROOT}
       - workspace:${WORKSPACE_ROOT}
-      - ${LOCAL_ROOT}:${LOCAL_ROOT}
+      # Répertoire hôte contenant les fichiers locaux consommés/produits par Airbyte.
+      # Dans l’interface Airbyte, les fichiers seront référencés avec /local/<nom_du_fichier>.
+      - ./directory:${LOCAL_ROOT}
   worker:
     image: airbyte/worker:${VERSION}
     logging: *default-logging
@@ -130,7 +132,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - workspace:${WORKSPACE_ROOT}
-      - ${LOCAL_ROOT}:${LOCAL_ROOT}
+      # Répertoire hôte contenant les fichiers locaux consommés/produits par Airbyte.
+      # Dans l’interface Airbyte, les fichiers seront référencés avec /local/<nom_du_fichier>.
+      - ./directory:${LOCAL_ROOT}
   server:
     image: airbyte/server:${VERSION}
     logging: *default-logging
@@ -165,7 +169,9 @@ services:
     volumes:
       - workspace:${WORKSPACE_ROOT}
       - data:${CONFIG_ROOT}
-      - ${LOCAL_ROOT}:${LOCAL_ROOT}
+      # Répertoire hôte contenant les fichiers locaux consommés/produits par Airbyte.
+      # Dans l’interface Airbyte, les fichiers seront référencés avec /local/<nom_du_fichier>.
+      - ./directory:${LOCAL_ROOT}
   webapp:
     image: airbyte/webapp:${VERSION}
     logging: *default-logging
@@ -200,6 +206,20 @@ services:
       - POSTGRES_USER=${DATABASE_USER}
     volumes:
       - ./temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    logging: *default-logging
+    container_name: pgadmin4
+    restart: unless-stopped
+    depends_on:
+      - database
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
 volumes:
   workspace:
     name: ${WORKSPACE_DOCKER_MOUNT}
@@ -210,3 +230,4 @@ volumes:
     name: ${DATA_DOCKER_MOUNT}
   db:
     name: ${DB_DOCKER_MOUNT}
+  pgadmin-data:
