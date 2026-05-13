@@ -1,4 +1,3 @@
-version: "3"
 x-logging:
   &default-logging
   options:
@@ -216,10 +215,25 @@ services:
     ports:
       - "5050:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     volumes:
       - pgadmin-data:/var/lib/pgadmin
+  dbt-postgres:
+    image: ghcr.io/dbt-labs/dbt-postgres:1.9.latest
+    logging: *default-logging
+    container_name: dbt-postgres
+    depends_on:
+      - database
+    build: .
+    volumes:
+      - .:/usr/app/dbt
+    ports:
+      - "5051:8080"
+    environment:
+      - DBT_PROFILES_DIR=/usr/app/dbt
+      - DBT_TARGET=dev
+    command: ["run"]
 volumes:
   workspace:
     name: ${WORKSPACE_DOCKER_MOUNT}
