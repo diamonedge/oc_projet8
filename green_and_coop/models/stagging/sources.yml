@@ -1,0 +1,8 @@
+version: 2
+sources:
+  - name: raw_data
+    schema: public
+    tables:
+      - name: _airbyte_raw_weather_underground_la_madeleine
+      - name: _airbyte_raw_weather_underground_ichtegem
+      - name: _airbyte_raw_stations_meteo_infoclimat

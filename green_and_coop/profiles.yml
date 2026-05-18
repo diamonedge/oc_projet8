@@ -1,0 +1,11 @@
+green_and_coop:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      user: postgres
+      password: "postgresql01#"
+      port: 5432
+      dbname: weather_data
+      schema: public

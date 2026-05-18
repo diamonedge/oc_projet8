@@ -1,0 +1,39 @@
+version: 2
+models:
+  - name: stg_infoclimat
+    columns:
+    - name: id_station
+      tests:
+      - unique
+      - not_null
+    - name: dh_utc
+      tests:
+      - not_null
+    - name: humidite
+    - name: pluie_1h
+    - name: pluie_3h
+    - name: pression
+    - name: vent_moyen
+    - name: temperature
+    - name: vent_rafales
+    - name: point_de_rosee
+    - name: vent_direction
+
+  - name: stg_underground_data
+    columns:
+    - name: station 
+    - name: uv
+    - name: gust
+    - name: time_hour
+      tests:
+      - not_null
+    - name: wind
+    - name: solar
+    - name: speed
+    - name: humidity
+    - name: pressure
+    - name: dew_point
+    - name: temperature
+    - name: precip_rate
+    - name: precip_accum
+
